@@ -612,10 +612,21 @@ function place2book_build_xml($node, $service_settings) {
 
   // -- set event times --
   $field_ding_event_date = field_get_items('node', $node, 'field_ding_event_date');
+  // -- set sale times --
+  $field_ding_sale_date = field_get_items('node', $node, 'field_ding_sale_date');
   // Set event time to begin
   $xml->event->begin_at = $field_ding_event_date[0]['value'] . ' ' . $field_ding_event_date[0]['timezone_db'];
   // Set event time to end
   $xml->event->end_at = $field_ding_event_date[0]['value2'] . ' ' . $field_ding_event_date[0]['timezone_db'];
+  // Set sale time to begin
+  $xml->event->sale_open = $field_ding_sale_date[0]['value'] . ' ' . $field_ding_sale_date[0]['timezone_db'];
+  
+  if ($field_ding_sale_date[0]['show_todate'] == 1){
+  // Set sale time to end
+  $xml->event->sale_close = $field_ding_sale_date[0]['value2'] . ' ' . $field_ding_sale_date[0]['timezone_db'];  
+  }else {    
+    $xml->event->sale_close = $xml->event->begin_at;
+  }
 
   // Set kultunaut_export setting
   $xml->event->kultunaut_export = $node->place2book['kultunaut_export'];
@@ -848,7 +859,7 @@ function render_place2book_ticketsinfo($node) {
   //variables for a date comparison
   $field_ding_event_date = field_get_items('node', $node, 'field_ding_event_date');
   $event_timestamp = strtotime($field_ding_event_date[0]['value']);
-
+  
   if (time() > $event_timestamp) {
     $type = 'event-over';
   }
