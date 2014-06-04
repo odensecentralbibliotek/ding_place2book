@@ -625,7 +625,7 @@ function place2book_build_xml($node, $service_settings) {
   // Set sale time to end
   $xml->event->sale_close = $field_ding_sale_date[0]['value2'] . ' ' . $field_ding_sale_date[0]['timezone_db'];  
   }else {    
-    $xml->event->sale_close = $xml->event->begin_at;
+    $xml->event->sale_close = $xml->event->end_at;
   }
 
   // Set kultunaut_export setting
