@@ -385,8 +385,9 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
   }
 
   //get the library id for the event
-  $og_group_ref = field_get_items('node', $node, 'og_group_ref');
-  $library_id = $og_group_ref[0]['target_id'];
+  $field_ding_event_library = field_get_items('node', $node, 'field_ding_event_library');
+
+  $library_id = db_query('SELECT etid FROM {og} WHERE gid = :gid', array(':gid' => $field_ding_event_library[0]['gid']))->fetchField();
 
   // Build XML headers.
   $api_key = place2book_get_api_key($library_id);
@@ -560,8 +561,9 @@ function place2book_build_xml($node, $service_settings) {
 
   //-- set location data --
   // If library has been selected, use location data from the library.
-  $og_group_ref = field_get_items('node', $node, 'og_group_ref');
-  $library_id = $og_group_ref[0]['target_id'];
+  $field_ding_event_library = field_get_items('node', $node, 'field_ding_event_library');
+
+  $library_id = db_query('SELECT etid FROM {og} WHERE gid = :gid', array(':gid' => $field_ding_event_library[0]['gid']))->fetchField();
 
   if ($library_id) {
     $libloc_result = db_query('SELECT   n.title,
@@ -589,13 +591,13 @@ function place2book_build_xml($node, $service_settings) {
   //
   // The check is only made for venue street address - if it is not there, the rest is not used either
   $field_address = field_get_items('node', $node, 'field_ding_event_location');
-  if (!empty($field_address[0]['thoroughfare'])) {
-    $xml->event->venue->name = $field_address[0]['name_line'];
-    $xml->event->venue->address1 = $field_address[0]['thoroughfare'];
-    $xml->event->venue->address2 = $field_address[0]['premise'];
-    $xml->event->venue->postal = $field_address[0]['postal_code'];
-    $xml->event->venue->city = $field_address[0]['locality'];
-    $xml->event->venue->country_code = drupal_strtoupper($field_address[0]['country']);
+  if (!empty($field_address['und'][0]['thoroughfare'])) {
+    $xml->event->venue->name = $field_address['und'][0]['name_line'];
+    $xml->event->venue->address1 = $field_address['und'][0]['thoroughfare'];
+    $xml->event->venue->address2 = $field_address['und'][0]['premise'];
+    $xml->event->venue->postal = $field_address['und'][0]['postal_code'];
+    $xml->event->venue->city = $field_address['und'][0]['locality'];
+    $xml->event->venue->country_code = drupal_strtoupper($field_address['und'][0]['country']);
   }
 
   // Set capacity - and if provided, unflag unlimited_capacity.
@@ -868,8 +870,9 @@ function render_place2book_ticketsinfo($node) {
       $service_settings = variable_get('ding_place2book', array());
 
       //get the library id for the event
-      $og_group_ref = field_get_items('node', $node, 'og_group_ref');
-      $library_id = $og_group_ref[0]['target_id'];
+      $field_ding_event_library = field_get_items('node', $node, 'field_ding_event_library');
+
+      $library_id = db_query('SELECT etid FROM {og} WHERE gid = :gid', array(':gid' => $field_ding_event_library[0]['gid']))->fetchField();
 
       $api_key = place2book_get_api_key($library_id);
       if ($api_key == NULL) {
