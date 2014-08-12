@@ -595,13 +595,13 @@ function place2book_build_xml($node, $service_settings) {
   //
   // The check is only made for venue street address - if it is not there, the rest is not used either
   $field_address = field_get_items('node', $node, 'field_ding_event_location');
-  if (!empty($field_address['und'][0]['thoroughfare'])) {
-    $xml->event->venue->name = $field_address['und'][0]['name_line'];
-    $xml->event->venue->address1 = $field_address['und'][0]['thoroughfare'];
-    $xml->event->venue->address2 = $field_address['und'][0]['premise'];
-    $xml->event->venue->postal = $field_address['und'][0]['postal_code'];
-    $xml->event->venue->city = $field_address['und'][0]['locality'];
-    $xml->event->venue->country_code = drupal_strtoupper($field_address['und'][0]['country']);
+  if (!empty($field_address[0]['thoroughfare'])) {
+    $xml->event->venue->name = $field_address[0]['name_line'];
+    $xml->event->venue->address1 = $field_address[0]['thoroughfare'];
+    $xml->event->venue->address2 = $field_address[0]['premise'];
+    $xml->event->venue->postal = $field_address[0]['postal_code'];
+    $xml->event->venue->city = $field_address[0]['locality'];
+    $xml->event->venue->country_code = drupal_strtoupper($field_address[0]['country']);
   }
 
   // Set capacity - and if provided, unflag unlimited_capacity.
