@@ -522,6 +522,7 @@ function place2book_build_xml($node, $service_settings) {
     <end_at></end_at>
     <sale_open></sale_open>
     <sale_close></sale_close>
+    <sales_period_enabled>1</sales_period_enabled>
     <venue>
       <name></name>
       <address1></address1>
