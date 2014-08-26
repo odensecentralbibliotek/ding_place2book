@@ -558,12 +558,7 @@ function place2book_build_xml($node, $service_settings) {
 
   // Set long description.
   $field_ding_event_body = field_get_items('node', $node, 'field_ding_event_body');
-  $xml->event->description_long = media_filter($field_ding_event_body[0]['value']);
-
-  // Set sales window times empty - and they will use the defaults in place2book.
-  $xml->event->sale_open = '';
-  $xml->event->sale_close = '';
-
+  $xml->event->description_long = $field_ding_event_body[0]['value'];
   //-- set location data --
   // If library has been selected, use location data from the library.
   $field_ding_event_library = field_get_items('node', $node, 'field_ding_event_library');
@@ -622,17 +617,38 @@ function place2book_build_xml($node, $service_settings) {
   // -- set sale times --
   $field_ding_sale_date = field_get_items('node', $node, 'field_ding_sale_date');
   // Set event time to begin
-  $xml->event->begin_at = $field_ding_event_date[0]['value'] . ' ' . $field_ding_event_date[0]['timezone_db'];
+  $xml->event->begin_at  = strtotime($field_ding_event_date[0]['value'].' '.$field_ding_event_date[0]['timezone_db']);
+  $xml->event->begin_at =   format_date($xml->event->begin_at,'custom','Y-m-d H:i:s',$field_ding_event_date[0]['timezone']);
   // Set event time to end
-  $xml->event->end_at = $field_ding_event_date[0]['value2'] . ' ' . $field_ding_event_date[0]['timezone_db'];
+  $xml->event->end_at = strtotime($field_ding_event_date[0]['value2'].' '.$field_ding_event_date[0]['timezone_db']);
+  $xml->event->end_at = format_date($xml->event->end_at,'custom','Y-m-d H:i:s',$field_ding_event_date[0]['timezone']);
   // Set sale time to begin
-  $xml->event->sale_open = $field_ding_sale_date[0]['value'] . ' ' . $field_ding_sale_date[0]['timezone_db'];
+  //$xml->event->sale_open = $field_ding_sale_date[0]['value'] . ' ' . $field_ding_sale_date[0]['timezone_db'];
   
-  if ($field_ding_sale_date[0]['show_todate'] == 1){
-  // Set sale time to end
-  $xml->event->sale_close = $field_ding_sale_date[0]['value2'] . ' ' . $field_ding_sale_date[0]['timezone_db'];  
-  }else {    
-    $xml->event->sale_close = $xml->event->begin_at;
+ // Set sales window times empty - and they will use the defaults in place2book.
+  $field_ding_sales_date_body = field_get_items('node', $node, 'field_ding_sale_date');
+  if($field_ding_sales_date_body[0]['show_todate'] == 1)
+  {  
+      $start_Date = strtotime($field_ding_sale_date[0]['value'].' '.$field_ding_sale_date[0]['timezone_db']);
+      $start_Date = format_date($start_Date,'custom','Y-m-d H:i:s',$field_ding_sale_date[0]['timezone']);
+      
+      $end_Date = strtotime($field_ding_sale_date[0]['value2'].' '.$field_ding_sale_date[0]['timezone_db']);
+      $end_Date = format_date($end_Date,'custom','Y-m-d H:i:s',$field_ding_sale_date[0]['timezone']);
+      
+      //Important: You must disable time formatting on the date field , else we will get wrong datestimes.
+      $xml->event->sale_open = $start_Date;
+      $xml->event->sale_close = $end_Date;
+  }
+  else
+  {
+      $start_Date = time();
+      $start_Date = format_date($start_Date,'custom','Y-m-d H:i:s',$field_ding_sale_date[0]['timezone']);
+      
+      $end_Date = strtotime($field_ding_event_date[0]['value'].' '.$field_ding_event_date[0]['timezone_db']);
+      $end_Date = format_date($end_Date,'custom','Y-m-d H:i:s',$field_ding_event_date[0]['timezone']);
+        
+      $xml->event->sale_open = $start_Date;
+      $xml->event->sale_close = $end_Date ;
   }
 
   // Set kultunaut_export setting
@@ -865,9 +881,10 @@ function render_place2book_ticketsinfo($node) {
 
   //variables for a date comparison
   $field_ding_event_date = field_get_items('node', $node, 'field_ding_event_date');
-  $event_timestamp = strtotime($field_ding_event_date[0]['value']);
-  
-  if (time() > $event_timestamp) {
+  $field_ding_sale_date = field_get_items('node', $node, 'field_ding_sale_date');
+  $event_timestamp = strtotime($field_ding_event_date[0]['value'] .' '.$field_ding_event_date[0]['timezone_db']);
+  $sale_timestamp = strtotime($field_ding_sale_date[0]['value2'] .' '.$field_ding_sale_date[0]['timezone_db']);
+  if (time() > $event_timestamp && time() > $sale_timestamp) {
     $type = 'event-over';
   }
   else {
