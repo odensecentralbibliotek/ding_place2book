@@ -643,17 +643,8 @@ function place2book_build_xml($node, $service_settings) {
   }
   else
   {
-    $start = new DateObject($field_ding_event_date[0]['value'], $field_ding_event_date[0]['timezone_db']);
-    date_timezone_set($start, timezone_open($field_ding_event_date[0]['timezone']));
-    
-    $end = new DateObject($field_ding_event_date[0]['value2'], $field_ding_event_date[0]['timezone_db']);
-    date_timezone_set($end, timezone_open($field_ding_event_date[0]['timezone']));
-    
-    $start = date_format_date($start, 'custom','Y-m-d h:m:s');
-    $end = date_format_date($end, 'custom','Y-m-d h:m:s');
-  
-     $xml->event->sale_open = $start;
-     $xml->event->sale_close = $end;
+     $xml->event->sale_open = "";
+     $xml->event->sale_close = "";
   }
   
   // Set sale time to begin
@@ -897,8 +888,10 @@ function render_place2book_ticketsinfo($node) {
   //variables for a date comparison
   $field_ding_event_date = field_get_items('node', $node, 'field_ding_event_date');
   $event_timestamp = strtotime($field_ding_event_date[0]['value']);
-  
-  if (time() > $event_timestamp) {
+  $event_timestamp_end = strtotime($field_ding_event_date[0]['value2']);
+  $Curtime = time();
+  $url = "";
+  if ($Curtime >= $event_timestamp_end) {
     $type = 'event-over';
   }
   else {
