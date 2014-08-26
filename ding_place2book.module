@@ -558,11 +558,10 @@ function place2book_build_xml($node, $service_settings) {
 
   // Set long description.
   $field_ding_event_body = field_get_items('node', $node, 'field_ding_event_body');
-  $xml->event->description_long = media_filter($field_ding_event_body[0]['value']);
+  $xml->event->description_long = $field_ding_event_body[0]['value'];
 
-  // Set sales window times empty - and they will use the defaults in place2book.
-  $xml->event->sale_open = '';
-  $xml->event->sale_close = '';
+  
+ 
 
   //-- set location data --
   // If library has been selected, use location data from the library.
@@ -625,15 +624,47 @@ function place2book_build_xml($node, $service_settings) {
   $xml->event->begin_at = $field_ding_event_date[0]['value'] . ' ' . $field_ding_event_date[0]['timezone_db'];
   // Set event time to end
   $xml->event->end_at = $field_ding_event_date[0]['value2'] . ' ' . $field_ding_event_date[0]['timezone_db'];
-  // Set sale time to begin
-  $xml->event->sale_open = $field_ding_sale_date[0]['value'] . ' ' . $field_ding_sale_date[0]['timezone_db'];
   
-  if ($field_ding_sale_date[0]['show_todate'] == 1){
-  // Set sale time to end
-  $xml->event->sale_close = $field_ding_sale_date[0]['value2'] . ' ' . $field_ding_sale_date[0]['timezone_db'];  
-  }else {    
-    $xml->event->sale_close = $xml->event->end_at;
+  // Set sales window times empty - and they will use the defaults in place2book.
+  $field_ding_sales_date_body = field_get_items('node', $node, 'field_ding_sale_date');
+  if($field_ding_sales_date_body[0]['show_todate'] == 1)
+  {
+      $start = new DateObject($field_ding_sales_date_body[0]['value'], $field_ding_sales_date_body[0]['timezone_db']);
+      date_timezone_set($start, timezone_open($field_ding_sales_date_body[0]['timezone']));
+
+      $end = new DateObject($field_ding_sales_date_body[0]['value2'], $field_ding_sales_date_body[0]['timezone_db']);
+      date_timezone_set($end, timezone_open($field_ding_sales_date_body[0]['timezone']));
+
+      $start = date_format_date($start, 'custom','Y-m-d h:m:s');
+      $end = date_format_date($end, 'custom','Y-m-d h:m:s');
+    
+      $xml->event->sale_open = $start;
+      $xml->event->sale_close =  $end;
   }
+  else
+  {
+    $start = new DateObject($field_ding_event_date[0]['value'], $field_ding_event_date[0]['timezone_db']);
+    date_timezone_set($start, timezone_open($field_ding_event_date[0]['timezone']));
+    
+    $end = new DateObject($field_ding_event_date[0]['value2'], $field_ding_event_date[0]['timezone_db']);
+    date_timezone_set($end, timezone_open($field_ding_event_date[0]['timezone']));
+    
+    $start = date_format_date($start, 'custom','Y-m-d h:m:s');
+    $end = date_format_date($end, 'custom','Y-m-d h:m:s');
+  
+     $xml->event->sale_open = $start;
+     $xml->event->sale_close = $end;
+  }
+  
+  // Set sale time to begin
+//  $xml->event->sale_open = $field_ding_sale_date[0]['value'] . ' ' . $field_ding_sale_date[0]['timezone_db'];
+  
+ // if ($field_ding_sale_date[0]['show_todate'] == 1){
+  // Set sale time to end
+ // $xml->event->sale_close = $field_ding_sale_date[0]['value2'] . ' ' . $field_ding_sale_date[0]['timezone_db'];  
+ // }else {    
+  //  $xml->event->sale_close = $xml->event->end_at;
+ // }
 
   // Set kultunaut_export setting
   $xml->event->kultunaut_export = $node->place2book['kultunaut_export'];
