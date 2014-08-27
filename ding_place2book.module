@@ -641,14 +641,14 @@ function place2book_build_xml($node, $service_settings) {
   }
   else
   {
-      $start_Date = time();
+      $start_Date = strtotime($field_ding_sale_date[0]['value'].' '.$field_ding_sale_date[0]['timezone_db']);
       $start_Date = format_date($start_Date,'custom','Y-m-d H:i:s',$field_ding_sale_date[0]['timezone']);
       
       $end_Date = strtotime($field_ding_event_date[0]['value'].' '.$field_ding_event_date[0]['timezone_db']);
       $end_Date = format_date($end_Date,'custom','Y-m-d H:i:s',$field_ding_event_date[0]['timezone']);
         
       $xml->event->sale_open = $start_Date;
-      $xml->event->sale_close = $end_Date ;
+      $xml->event->sale_close = $end_Date;
   }
 
   // Set kultunaut_export setting
