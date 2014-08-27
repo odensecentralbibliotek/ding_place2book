@@ -919,6 +919,10 @@ function render_place2book_ticketsinfo($node) {
           $type = 'closed-admission';
         }
         // Check if sales period is in the future and ticket sale has not started yet
+          elseif ($p2b_result->headers['sales-status'] == 'upcoming') {
+          $type = 'sale-not-started';
+        }
+        // Check if sales period is in the future and ticket sale has not started yet
         elseif ($p2b_result->headers['sales-status'] == 'upcoming') {
           $type = 'sale-not-started';
         }
@@ -967,6 +971,9 @@ function theme_place2book_ticketsinfo($variables) {
       break;
     case 'closed-admission':
       $output = '<div class="place2book info">' . t('The event is closed for admission') . '</div>';
+      break;
+    case 'sale-not-started':
+      $output = '<div class="place2book info">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'sale-not-started':
       $output = '<div class="place2book info">' . t('Ticket sale has not yet started for this event') . '</div>';
