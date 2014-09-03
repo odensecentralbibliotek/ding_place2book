@@ -65,7 +65,7 @@ function ding_place2book_get_ticketinfo($nid) {
 
   $result = array();
   $result['nid'] = $nid;
-  $result['markup'] = render_place2book_ticketsinfo($eventnode);
+  $result['markup'] =  render_place2book_ticketsinfo($eventnode);
 
   drupal_add_http_header('Content-Type', 'application/json; utf-8');
   echo json_encode($result);
@@ -157,10 +157,33 @@ function ding_place2book_menu() {
     'page arguments' => array(3),
     'access arguments' => array('access content'),
   );
+  
+  $items['ding/place2book/ticketinfo/ajax/%'] = array(
+    'page callback' => 'ding_place2book_ajax_get_ticketinfo', // Render HTML
+    'description' => 'Gets Bulk place2book status for nodes',
+    'page arguments' => array(4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
 
+   );
   return $items;
 }
-
+function ding_place2book_ajax_get_ticketinfo($Node_Array) {
+  // Just load a node and return teaser, you can return whatever you want including forms
+    $Nodeids = json_decode($Node_Array);
+    $ReturnResult = array();
+ 
+    foreach($Nodeids as $nodid)
+    {
+        $Node = node_load($nodid);
+        $result = array();
+        $result['markup'] =  str_replace('btn-large','btn-small',render_place2book_ticketsinfo($Node));
+        $result['nid'] = $nodid;
+        array_push($ReturnResult,$result);
+    }
+    drupal_json_output($ReturnResult);
+    drupal_exit();
+}
 /*
  * Implementation of hook_node_view()
  */
@@ -409,10 +432,11 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
       $options = array(
                   'method' => 'POST',
                   'data' => $xml->asXML(),
-                  'headers' => $headers,
+                  'headers' => $headers
                 );
+      
       $req_result = drupal_http_request($service_settings['service_url'] . '/create_event', $options);
-
+   
       // Catch insert error by checking the event id.
       if (empty($req_result->headers['event-id'])) {
         $p2b_error = $req_result->headers['status'] . ' - ' . $req_result->status_message;
@@ -908,8 +932,11 @@ function render_place2book_ticketsinfo($node) {
       $options = array(
                 'method' => 'GET',
                 'headers' => $headers,
+
               );
+      $p2b_result = null;
       $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $options);
+      sleep(1);
 
       //we must have a sales-status header
       if ($p2b_result->headers['sales-status']) {
