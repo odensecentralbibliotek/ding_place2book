@@ -242,7 +242,14 @@ function ding_place2book_node_update($node) {
     // Get existing Place2book settings for this node.
     $settings = place2book_settings($node->nid);
     $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
-
+    if($node->field_place2book_tickets['und']['0']['value'] == "placeholder" || $node->field_place2book_tickets['und']['0']['value'] == "")
+    {
+        $node->field_place2book_tickets['und']['0']['value'] = $place2book_id;
+        drupal_write_record('node', $node, 'nid');
+       // Save fields.
+        $function = "field_attach_update";
+        $function('node', $node);
+    }
     // Figure out if this is an update, delete or create. This is some what
     // complex because node may exists before this module is introduced.
     // maintain_copy is set on node edit page
@@ -251,6 +258,8 @@ function ding_place2book_node_update($node) {
       // - which means we perform an update
       if (isset($settings['maintain_copy']) && $settings['maintain_copy'] == 1) {
         place2book_event_op('update', $node, $place2book_id);
+        //Legacy support for when field was unused.
+        
       }
       // current maintain_copy differs from previous state and is now on
       // - which means we perform an insert
