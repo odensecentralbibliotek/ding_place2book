@@ -935,12 +935,13 @@ function render_place2book_ticketsinfo($node) {
 
               );
       $p2b_result = null;
+      //sleep(1);
       $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $options);
-      sleep(1);
-
+      
+      
       //we must have a sales-status header
       if ($p2b_result->headers['sales-status']) {
-
+          
         //check if the event is closed for admissions
         if ($p2b_result->headers['sales-status'] == 'closed') {
           $type = 'closed-admission';
