@@ -420,10 +420,6 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
  *  Place2Book identifier.
  */
 function place2book_event_op($op, $node, $place2book_id = NULL) {
-    if($place2book_id == "-1")
-    {
-        return;
-    }
   // Service settings.
   $service_settings = variable_get('ding_place2book', array());
   if (empty($service_settings)) {
