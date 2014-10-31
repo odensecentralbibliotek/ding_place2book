@@ -996,37 +996,46 @@ function render_place2book_ticketsinfo($node) {
       }
     }
   }
-
-  return theme('place2book_ticketsinfo', array('place2book_id' => $place2book_id, 'url' => $url, 'type' => $type));
+ 
+  return place2book_ticketsinfo(array('place2book_id' => $place2book_id, 'url' => $url, 'type' => $type));
+ // return theme('place2book_ticketsinfo', array('place2book_id' => $place2book_id, 'url' => $url, 'type' => $type,'return_url' => null,'return_url_description' => null));
 }
 
 /*
  * ticketsinfo theme function
  */
-function theme_place2book_ticketsinfo($variables) {
+function place2book_ticketsinfo($variables) {
   $output = '';
   $place2book_id = $variables['place2book_id'];
   $url = $variables['url'];
+  $vars = variable_get('ding_place2book', array());
+  
+  $referer_url = $_SERVER['HTTP_REFERER']; // is this correct in all cases ? seems so..
+  if($vars['return_url'] != null && $vars['return_url'] == true )
+  {
+      $url .= "&return_descriptor=" . $referer_url;
+      $url .= isset($vars['return_url_description']) ? "::" . $vars['return_url_description'] : "";
+  }
   $type = $variables['type'];
 
   switch ($type) {
     case 'event-over':
-      $output = '<div class="place2book info">' . t('The event has already taken place') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('The event has already taken place') . '</div>';
       break;
     case 'closed-admission':
-      $output = '<div class="place2book info">' . t('The event is closed for admission') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('The event is closed for admission') . '</div>';
       break;
     case 'sale-not-started':
-      $output = '<div class="place2book info">' . t('Ticket sale has not yet started for this event') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'sale-not-started':
-      $output = '<div class="place2book info">' . t('Ticket sale has not yet started for this event') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'no-tickets-left':
-      $output = '<div class="place2book info">' . t('Sold out') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('Sold out') . '</div>';
       break;
     case 'order-link':
-      $output = '<div class="place2book order">' . l(t('Book a ticket'), $url) . '</div>';
+      $output = l(t('Book a ticket'), $url, array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-large') , 'target' => '_blank')));
       break;
     default:
       $output = '';

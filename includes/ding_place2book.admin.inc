@@ -73,6 +73,21 @@ function ding_place2book_admin_settings_form($form_state) {
     '#required' => TRUE,
     '#description' => t('E-mail sent to Place2Book as the provider'),
   );
+  $form['ding_place2book']['return_url'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use place2Book return url'),
+    '#default_value' => true,
+    '#required' => TRUE,
+    '#description' => t('Use return_url param to enable users to return to the page from where they came after purchase. '),
+  );
+  
+    $form['ding_place2book']['return_url_description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Place2Book return url description'),
+    '#default_value' => "Odense Centralbibliotek",
+    '#required' => false,
+    '#description' => t('The text shown on the "return to .." btn after purchase.'),
+  );
 
   $form['ding_place2book_libraries'] = array(
     '#type' => 'fieldset',
