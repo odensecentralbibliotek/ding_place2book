@@ -1010,9 +1010,9 @@ function place2book_ticketsinfo($variables) {
   $url = $variables['url'];
   $vars = variable_get('ding_place2book', array());
   
-  $referer_url = $_SERVER['HTTP_REFERER']; // is this correct in all cases ? seems so..
   if($vars['return_url'] != null && $vars['return_url'] == true )
   {
+      $referer_url = $_SERVER['HTTP_REFERER']; // is this correct in all cases ? seems so..
       $url .= "&return_descriptor=" . $referer_url;
       $url .= isset($vars['return_url_description']) ? "::" . $vars['return_url_description'] : "";
   }
