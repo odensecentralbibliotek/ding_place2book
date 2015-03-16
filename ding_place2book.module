@@ -71,7 +71,16 @@ function ding_place2book_get_ticketinfo($nid) {
   echo json_encode($result);
   return;
 }
-
+function ding_place2book_get_ticketinfo_raw($nid)
+{
+    $eventnode = node_load($nid);
+    $result = array();
+    $result['nid'] = $nid;
+    $result['data'] =  render_place2book_ticketsinfo($eventnode,true);
+    drupal_add_http_header('Content-Type', 'application/json; utf-8');
+    echo json_encode($result);
+    return;
+}
 /**
  * Implementation of hook_init().
  */
@@ -166,6 +175,15 @@ function ding_place2book_menu() {
     'access arguments' => array('access content'),
 
    );
+   $items['ding/place2book/ticketinfo/ajax/raw/%'] = array(
+    'page callback' => 'ding_place2book_get_ticketinfo_raw', // Render HTML
+    'description' => 'Gets Bulk place2book status for nodes with raw return data.',
+    'page arguments' => array(5),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+   );
+  
+  
   return $items;
 }
 function ding_place2book_ajax_get_ticketinfo($Node_Array) {
@@ -177,7 +195,7 @@ function ding_place2book_ajax_get_ticketinfo($Node_Array) {
     {
         $Node = node_load($nodid);
         $result = array();
-        $result['markup'] =  str_replace('btn-large','btn-small',render_place2book_ticketsinfo($Node));
+        $result['markup'] =  str_replace('btn-large','btn-small',render_place2book_ticketsinfo($Node,false));
         $result['nid'] = $nodid;
         array_push($ReturnResult,$result);
     }
@@ -899,13 +917,14 @@ function place2book_get_api_key($library_id = NULL) {
 /*
  * Rendering function for place2book tickets info
  */
-function render_place2book_ticketsinfo($node) {
+function render_place2book_ticketsinfo($node,$return_raw = false) {
   $type = '';
   $url = '';
   $place2book_id = 0;
   $maintain_copy = 0;
   $passive = 0;
-
+  $p2b_result = null;
+  
   //get data from ding_place2book table
   $place2book_result = db_query('SELECT place2book_id, maintain_copy, passive FROM {ding_place2book} WHERE nid = :nid', array(':nid' => $node->nid));
   foreach ($place2book_result as $place2book) {
@@ -950,7 +969,7 @@ function render_place2book_ticketsinfo($node) {
                 'headers' => $headers,
 
               );
-      $p2b_result = null;
+      
       //sleep(1);
       $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $options);
       
@@ -996,7 +1015,10 @@ function render_place2book_ticketsinfo($node) {
       }
     }
   }
- 
+  if($return_raw == true)
+  {
+      return $p2b_result;
+  }
   return place2book_ticketsinfo(array('place2book_id' => $place2book_id, 'url' => $url, 'type' => $type));
  // return theme('place2book_ticketsinfo', array('place2book_id' => $place2book_id, 'url' => $url, 'type' => $type,'return_url' => null,'return_url_description' => null));
 }
