@@ -1114,11 +1114,20 @@ function ding_place2book_scheduler_api($n,$action)
             $n->place2book = $place2book_settings;
             $n->capacity = $place2book_settings['capacity'];
             /*
-             * Make it look like we defined the sales start/end data
-             * this ensures we dont overwrite user set dates.
-             * The dates are always both set , when node is created.
+             * check if user has defined defined the sales start/end data
+             * if the two sales data are equal user has not defined a custom
+             * end data and we will use the events start data instead.
+             * this ensures we dont overwrite dates.
              */
-            $n->field_ding_sale_date['und'][0]['show_todate'] = 1;
+            if( $n->field_ding_sale_date['und'][0]['value'] !=  $n->field_ding_sale_date['und'][0]['value2'])
+            {
+                $n->field_ding_sale_date['und'][0]['show_todate'] = 1;
+            }
+            else
+            {
+                $n->field_ding_sale_date['und'][0]['show_todate'] = 0;
+            }
+            //$n->cron_job = 1;
             ding_place2book_node_update($n);
         }
 
