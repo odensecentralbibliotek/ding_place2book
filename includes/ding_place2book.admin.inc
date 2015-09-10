@@ -10,7 +10,7 @@
  */
 function ding_place2book_admin_settings_form($form_state) {
   global $user;
-
+  $old_vars = variable_get('ding_place2book');
   $form = array(
     '#tree' => TRUE,
   );
@@ -84,7 +84,7 @@ function ding_place2book_admin_settings_form($form_state) {
     $form['ding_place2book']['return_url_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Place2Book return url description'),
-    '#default_value' => "Odense Centralbibliotek",
+    '#default_value' => $old_vars['return_url_description'] ? $old_vars['return_url_description'] : '',
     '#required' => false,
     '#description' => t('The text shown on the "return to .." btn after purchase.'),
   );
