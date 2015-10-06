@@ -689,7 +689,13 @@ function place2book_build_xml($node, $service_settings) {
   if (isset($field_ding_event_price[0]['value'])) {
     $xml->event->price->value = $field_ding_event_price[0]['value'] * 100;
   }
-
+  /*
+   * Set the default ticket name
+   */
+  $field_standard_billet_navn = field_get_items('node', $node, 'field_standard_billet_navn');
+  if (isset($field_standard_billet_navn[0]['value'])) {
+      $xml->event->price->name =  $field_standard_billet_navn[0]['value'];
+  }
   // -- set event times --
   $field_ding_event_date = field_get_items('node', $node, 'field_ding_event_date');
   // -- set sale times --
