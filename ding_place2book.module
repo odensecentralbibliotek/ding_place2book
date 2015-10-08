@@ -1028,7 +1028,10 @@ function render_place2book_ticketsinfo($node,$return_raw = false) {
             $type = 'no-tickets-left';
           }
           else {
-
+            if ($p2b_result->headers['sales-status'] == 'open' && ((int)$p2b_result->headers['available-tickets'] > 0 || strpos($p2b_result->headers['available-tickets'], 'antal') > 0)) {
+              $type = 'order-link';
+              $url = $p2b_result->headers['location'];
+            }
             /*
              * check to see if we should present an link for ordering a ticket
              * number from Available-Tickets header is a string and must be typecast as integer
