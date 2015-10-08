@@ -1028,7 +1028,8 @@ function render_place2book_ticketsinfo($node,$return_raw = false) {
             $type = 'no-tickets-left';
           }
           else {
-            if ($p2b_result->headers['sales-status'] == 'open' && ((int)$p2b_result->headers['available-tickets'] > 0 || strpos($p2b_result->headers['available-tickets'], 'antal') > 0)) {
+            if ($p2b_result->headers['sales-status'] == 'open' && ((int)$p2b_result->headers['available-tickets'] > 0 ) 
+                    && $p2b_result->headers['waiting-list'] != 'true') {
               $type = 'order-link';
               $url = $p2b_result->headers['location'];
             }
