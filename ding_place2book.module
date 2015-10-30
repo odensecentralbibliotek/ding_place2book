@@ -1074,7 +1074,7 @@ function place2book_ticketsinfo($variables) {
 
   switch ($type) {
     case 'event-over':
-      $output = '<div class="btn-danger btn-large">' . t('The event has already taken place') . '</div>';
+      $output = '<div class="btn-warning btn-large">' . t('The event has already taken place') . '</div>';
       break;
     case 'closed-admission':
       $output = '<div class="btn-danger btn-large">' . t('The event is closed for admission') . '</div>';
