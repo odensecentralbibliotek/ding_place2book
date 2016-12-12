@@ -434,25 +434,16 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
       )    
   ); 
   $form['place2book']['maintain_copy']['#states'] = array(
-    'unchecked' => array(
-      ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
-    ),
     'disabled' => array(
         ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
       )
   ); 
   $form['place2book']['kultunaut_export']['#states'] = array(
-    'unchecked' => array(
-        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
-    ),
     'disabled' => array(
         ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
       )  
   );
   $form['place2book']['passive']['#states'] = array(
-    'unchecked' => array(
-        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
-    ),
     'disabled' => array(
     ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
       )  
