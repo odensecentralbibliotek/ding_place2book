@@ -422,6 +422,41 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
     '#default_value' => isset($node_settings['passive']) ? $node_settings['passive'] : (bool) $node_settings['defaults']['passive'],
     '#description' => t('If checked, Place2book flags the event as passive with no ticket sale. This can be useful for sending events to Kultunaut without actually using Place2book, or using Place2book for keeping record of all events with or without tickets.'),
   );
+  
+  $form['field_ding_event_price']['und'][0]['value']['#states'] = array(
+        'visible' => array(
+            ':input[name="field_custom_price[und]"]' =>  array('checked' => FALSE),            
+        )    
+  );   
+  $form['field_valgfrit_pris']['und'][0]['value']['#states'] = array(
+    'visible' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
+      )    
+  ); 
+  $form['place2book']['maintain_copy']['#states'] = array(
+    'unchecked' => array(
+      ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+    ),
+    'disabled' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
+      )
+  ); 
+  $form['place2book']['kultunaut_export']['#states'] = array(
+    'unchecked' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+    ),
+    'disabled' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
+      )  
+  );
+  $form['place2book']['passive']['#states'] = array(
+    'unchecked' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+    ),
+    'disabled' => array(
+    ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
+      )  
+  );
 }
 
 /**
