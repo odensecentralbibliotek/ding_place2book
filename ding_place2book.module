@@ -326,7 +326,7 @@ function ding_place2book_node_delete($node) {
                                FROM {ding_place2book}
                                WHERE nid = :nid', array(':nid' => $node->nid))
                      ->fetchField();
-    if ($place2book_id) {
+    if ($place2book_id != '-1') {
       // Get existing Place2book settings for this node.
       $settings = place2book_settings($node->nid);
 
@@ -398,6 +398,11 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
   );
 
   $form['place2book']['maintain_copy'] = array(
+    '#states' => array(
+      'disabled' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+        )
+      ),
     '#type' => 'checkbox',
     '#title' => t('Maintain copy on Place2Book'),
     '#default_value' => isset($node_settings['maintain_copy']) ? $node_settings['maintain_copy'] : (bool) $node_settings['defaults']['maintain_copy'],
@@ -412,6 +417,11 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
   );
 
   $form['place2book']['kultunaut_export'] = array(
+    '#states' => array(
+      'disabled' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+        )
+      ),
     '#type' => 'checkbox',
     '#title' => t('Kultunaut export'),
     '#default_value' => isset($node_settings['kultunaut_export']) ? $node_settings['kultunaut_export'] : (bool) $node_settings['defaults']['kultunaut_export'],
@@ -419,13 +429,28 @@ function ding_place2book_form_ding_event_node_form_alter(&$form, &$form_state, $
   );
 
   $form['place2book']['passive'] = array(
+    '#states' => array(
+      'disabled' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),
+        )
+      ),
     '#type' => 'checkbox',
     '#title' => t('Passive event'),
     '#default_value' => isset($node_settings['passive']) ? $node_settings['passive'] : (bool) $node_settings['defaults']['passive'],
     '#description' => t('If checked, Place2book flags the event as passive with no ticket sale. This can be useful for sending events to Kultunaut without actually using Place2book, or using Place2book for keeping record of all events with or without tickets.'),
   );
+  
+  $form['field_ding_event_price']['und'][0]['value']['#states'] = array(
+        'visible' => array(
+            ':input[name="field_custom_price[und]"]' =>  array('checked' => FALSE),            
+        )    
+  );   
+  $form['field_valgfrit_pris']['und'][0]['value']['#states'] = array(
+    'visible' => array(
+        ':input[name="field_custom_price[und]"]' =>  array('checked' => TRUE),            
+      )    
+  ); 
 }
-
 /**
  * Handles communitaction with the place2book web-services, which consists of
  * insert, update and delete opreations.
@@ -485,7 +510,7 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
    
       // Catch insert error by checking the event id.
       if (empty($req_result->headers['event-id'])) {
-        $p2b_error = $req_result->headers['status'] . ' - ' . $req_result->status_message;
+        $p2b_error = $req_result->headers['status'] . ' - ' . $req_result->headers['error-message'];
         drupal_set_message(t('INSERT was NOT PERFORMED on Place2book. Place2book returned this error:') . $p2b_error, 'error', FALSE);
       }
       else {
@@ -1079,16 +1104,13 @@ function place2book_ticketsinfo($variables) {
       $output = '<div class="btn-warning btn-large">' . t('The event has already taken place') . '</div>';
       break;
     case 'closed-admission':
-      $output = '<div class="btn-warning btn-large">' . t('The event is closed for admission') . '</div>';
-      break;
-    case 'sale-not-started':
-      $output = '<div class="btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
+      $output = '<div class="btn-danger btn-large">' . t('The event is closed for admission') . '</div>';
       break;
     case 'sale-not-started':
       $output = '<div class="btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'no-tickets-left':
-      $output = '<div class="btn-warning btn-large">' . t('Sold out') . '</div>';
+      $output = '<div class="btn-danger btn-large">' . t('Sold out') . '</div>';
       break;
     case 'waiting-list':
       $output = '<a class="btn-warning btn-large" target="_blank" href="'.$url.'">' . t('Venteliste') . '</a>';
