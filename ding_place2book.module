@@ -69,7 +69,7 @@ function ding_place2book_get_ticketinfo($nid) {
 
   drupal_add_http_header('Content-Type', 'application/json; utf-8');
   drupal_add_http_header('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0', FALSE);
-  drupal_add_http_header('X-Speed-Cache', 'BYPASS');
+  drupal_add_http_header('X-Speed-Cache', 'BYPASS', FALSE);
   echo json_encode($result);
   return;
 }
