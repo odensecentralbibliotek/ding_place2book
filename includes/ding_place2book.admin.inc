@@ -88,6 +88,13 @@ function ding_place2book_admin_settings_form($form_state) {
     '#required' => false,
     '#description' => t('The text shown on the "return to .." btn after purchase.'),
   );
+  $form['ding_place2book']['pre_loader_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Preloader Url for ticket purchaes'),
+    '#default_value' => $old_vars['pre_loader_url'] ? $old_vars['pre_loader_url'] : '',
+    '#required' => false,
+    '#description' => t('The Ticket overview that is linked to from preloader.'),
+  );
 
   $form['ding_place2book_libraries'] = array(
     '#type' => 'fieldset',

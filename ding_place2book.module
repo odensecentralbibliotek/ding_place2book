@@ -90,6 +90,12 @@ function ding_place2book_get_ticketinfo_raw($nid)
 function ding_place2book_init() {
   drupal_add_js(drupal_get_path('module', 'ding_place2book') . '/js/ding_place2book.js');
   drupal_add_css(drupal_get_path('module', 'ding_place2book') . '/css/ding_place2book.css');
+  $defaults = variable_get('ding_place2book', array());
+  drupal_add_js(array(
+  'ding_place2book' => array(
+    'pre_loader_url' => !empty($defaults['pre_loader_url']) ? $defaults['pre_loader_url'] : null,
+  ),
+), 'setting');
 }
 
 /**
