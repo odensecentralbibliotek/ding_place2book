@@ -77,7 +77,7 @@ function ding_place2book_uninstall() {
   variable_del('ding_place2book_event_nodes');
 }
 /**
- * Create new database table {cache_obb_search_carousel}.
+ * Create new database table {ding_place2book_field_collections}.
  * Enables use of field_collections that dont follow node table nid.
  */
 function ding_place2book_update_1() {

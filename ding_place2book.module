@@ -1064,7 +1064,10 @@ function render_place2book_ticketsinfo($node,$return_raw = false) {
   $maintain_copy = 0;
   $passive = 0;
   $p2b_result = null;
- 
+   if(isset($node->field_event_hold['und']) && sizeof($node->field_event_hold['und']) != 0)
+   {
+       return place2book_ticketsinfo(array('place2book_id' => $place2book_id, 'url' => url('node/'. $node->nid), 'type' => 'has-teams','return_url' => FALSE));     
+   }
   //get data from ding_place2book table
   $place2book_result = null;
   if(isset($node->item_id))
@@ -1082,7 +1085,6 @@ function render_place2book_ticketsinfo($node,$return_raw = false) {
   {
       $place2book_result = db_query('SELECT place2book_id, maintain_copy, passive FROM {ding_place2book} WHERE nid = :nid', array(':nid' => $node->nid));
   }
-  
   foreach ($place2book_result as $place2book) {
     $place2book_id = $place2book->place2book_id;
     $maintain_copy = $place2book->maintain_copy;
@@ -1220,7 +1222,7 @@ function place2book_ticketsinfo($variables) {
       $output = l(t('Book a ticket'), $url, array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-large') , 'target' => '_blank')));
       break;
     case 'has-teams':
-      $output = l(t('Show teams'), $url, array('attributes' => array('class' => array('btn', 'btn', 'btn-large') , 'target' => '_blank')));
+      $output = l(t('Show teams'), $variables['url'], array('attributes' => array('class' => array('btn', 'btn', 'btn-large') , 'target' => '_blank')));
       break;
     default:
       $output = '';
