@@ -270,7 +270,6 @@ function ding_place2book_node_insert($node) {
         }
     else {
       // Insert - no copy at place2book, save settings only
-      _place2book_db_op('insert', $node, -1);
       $node->field_place2book_tickets['und']['0']['value']= '';
       drupal_write_record('node', $node, 'nid');
       // Save fields.
