@@ -290,8 +290,11 @@ function ding_place2book_node_update($node) {
     // when performing a bulk update, updating via scheduler module etc.
       $op = 'update';
     drupal_alter('ding_place2book_pre', $node,$op); // alter node , for usecase with multiple events on 1 event. main event should not have p2b.
-    if (empty($node->place2book)) {
-      return;
+    global $user;
+    $rid = array_search('Event rapportør', $user->roles);
+    $role = count($user->roles);
+    if (user_has_role($rid) && ($role == '2') || empty($node->place2book)) {
+        return;
     }
     
     // Get existing Place2book settings for this node.
