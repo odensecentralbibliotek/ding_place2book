@@ -275,8 +275,6 @@ function ding_place2book_node_insert($node) {
       // Save fields.
       $function = "field_attach_update";
       $function('node', $node);
-      
-      
     }
   }
 }
