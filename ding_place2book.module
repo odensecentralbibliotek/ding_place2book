@@ -537,7 +537,7 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
   }
 
   //get the library id for the event
-  $field_ding_event_library = field_get_items($node->type, $node, 'field_ding_event_library');
+  $field_ding_event_library = field_get_items($node->type == "ding_event" ? 'node' : $node->type, $node, 'field_ding_event_library');
 
   $library_id = db_query('SELECT etid FROM {og} WHERE gid = :gid', array(':gid' => $field_ding_event_library[0]['gid']))->fetchField();
 
@@ -712,6 +712,10 @@ function place2book_build_xml($node, $service_settings) {
     <kultunaut_export_category></kultunaut_export_category>
   </event>
     </data>';
+  if($node->type != "field_collection_item")
+  {
+      $node->type = "node";
+  }
   $xml = simplexml_load_string($event_create_str);
 
   // Set provider data from the settings.
