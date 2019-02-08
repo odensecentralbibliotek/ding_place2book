@@ -714,7 +714,11 @@ function place2book_build_xml($node, $service_settings) {
     </data>';
   if($node->type != "field_collection_item")
   {
-      $node->type = "node";
+      $type = "node";
+  }
+  else
+  {
+      $type = $node->type;
   }
   $xml = simplexml_load_string($event_create_str);
 
@@ -726,15 +730,15 @@ function place2book_build_xml($node, $service_settings) {
   $xml->event->name = $node->title;
 
   // Set short description.
-  $field_ding_event_lead = field_get_items($node->type, $node, 'field_ding_event_lead');
+  $field_ding_event_lead = field_get_items($type, $node, 'field_ding_event_lead');
   $xml->event->description_short = $field_ding_event_lead[0]['value'];
 
   // Set long description.
-  $field_ding_event_body = field_get_items($node->type, $node, 'field_ding_event_body');
+  $field_ding_event_body = field_get_items($type, $node, 'field_ding_event_body');
   $xml->event->description_long = $field_ding_event_body[0]['value'];
   //-- set location data --
   // If library has been selected, use location data from the library.
-  $field_ding_event_library = field_get_items($node->type, $node, 'field_ding_event_library');
+  $field_ding_event_library = field_get_items($type, $node, 'field_ding_event_library');
 
   $library_id = db_query('SELECT etid FROM {og} WHERE gid = :gid', array(':gid' => $field_ding_event_library[0]['gid']))->fetchField();
 
@@ -763,7 +767,7 @@ function place2book_build_xml($node, $service_settings) {
   // where possible
   //
   // The check is only made for venue street address - if it is not there, the rest is not used either
-  $field_address = field_get_items($node->type, $node, 'field_ding_event_location');
+  $field_address = field_get_items($type, $node, 'field_ding_event_location');
   if (!empty($field_address[0]['thoroughfare'])) {
     $xml->event->venue->name = $field_address[0]['name_line'];
     $xml->event->venue->address1 = $field_address[0]['thoroughfare'];
@@ -780,21 +784,21 @@ function place2book_build_xml($node, $service_settings) {
   }
 
   // Set ticket price - multiplied by 100, Place2book receives amount in oere instead of kr.
-  $field_ding_event_price = field_get_items($node->type, $node, 'field_ding_event_price');
+  $field_ding_event_price = field_get_items($type, $node, 'field_ding_event_price');
   if (isset($field_ding_event_price[0]['value'])) {
     $xml->event->price->value = $field_ding_event_price[0]['value'] * 100;
   }
   /*
    * Set the default ticket name
    */
-  $field_standard_billet_navn = field_get_items($node->type, $node, 'field_standard_billet_navn');
+  $field_standard_billet_navn = field_get_items($type, $node, 'field_standard_billet_navn');
   if (isset($field_standard_billet_navn[0]['value'])) {
       $xml->event->price->name =  $field_standard_billet_navn[0]['value'];
   }
   // -- set event times --
-  $field_ding_event_date = field_get_items($node->type, $node, 'field_ding_event_date');
+  $field_ding_event_date = field_get_items($type, $node, 'field_ding_event_date');
   // -- set sale times --
-  $field_ding_sale_date = field_get_items($node->type, $node, 'field_ding_sale_date');
+  $field_ding_sale_date = field_get_items($type, $node, 'field_ding_sale_date');
   // Set event time to begin
   $xml->event->begin_at  = strtotime($field_ding_event_date[0]['value'].' '.$field_ding_event_date[0]['timezone_db']);
   $xml->event->begin_at =   format_date($xml->event->begin_at,'custom','Y-m-d H:i:s',$field_ding_event_date[0]['timezone']);
@@ -842,7 +846,7 @@ function place2book_build_xml($node, $service_settings) {
   // -- set kultunaut terms --
 
   // Set kultunaut age group
-  $field_ding_event_target = field_get_items($node->type, $node, 'field_ding_event_target');
+  $field_ding_event_target = field_get_items($type, $node, 'field_ding_event_target');
   // I have the term ids already, so the following query will give
   // me term name to use on kultunaut_age_group
   if (isset($field_ding_event_target[0])) {
@@ -865,7 +869,7 @@ function place2book_build_xml($node, $service_settings) {
   }
 
   // Set kultunaut export category
-  $field_ding_event_category = field_get_items($node->type, $node, 'field_ding_event_category');
+  $field_ding_event_category = field_get_items($type, $node, 'field_ding_event_category');
   // I have the term ids already, so the following query will give
   // me term name to use on kultunaut_export_category
   if (isset($field_ding_event_category[0])) {
@@ -888,8 +892,8 @@ function place2book_build_xml($node, $service_settings) {
   }
 
   // Set kultunaut picture URL
-  $field_ding_event_list_image = field_get_items($node->type, $node, 'field_ding_event_list_image');
-  $field_ding_event_title_image = field_get_items($node->type, $node, 'field_ding_event_title_image');
+  $field_ding_event_list_image = field_get_items($type, $node, 'field_ding_event_list_image');
+  $field_ding_event_title_image = field_get_items($type, $node, 'field_ding_event_title_image');
   
   //the uri of the image file is not found in the updated node object - we retrieve it with file_load
   if (!empty($field_ding_event_list_image)) {
