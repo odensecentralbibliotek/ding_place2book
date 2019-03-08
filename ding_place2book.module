@@ -266,6 +266,12 @@ function ding_place2book_node_insert($node) {
   if ($node->type == "ding_event") {
       $op = 'insert';
     drupal_alter('ding_place2book_pre', $node,$op); // alter node , for usecase with multiple events on 1 event. main event should not have p2b.
+    global $user;
+    $rid = array_search('Event rapportør', $user->roles);
+    $role = count($user->roles);
+    if (user_has_role($rid) && ($role == '2') || empty($node->place2book)) {
+        return;
+    }
     if ($node->place2book['maintain_copy'] == 1) {
             // Insert - maintain_copy and new event node.
             $place2book_id = place2book_event_op('insert', $node);
