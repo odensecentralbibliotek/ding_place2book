@@ -311,10 +311,10 @@ function ding_place2book_node_update($node) {
     // Get existing Place2book settings for this node.
     $settings = place2book_settings($node->nid);
     $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
-    if($place2book_id == null)
+    /*if($place2book_id == null)
     {
         return;
-    }
+    }*/
     if($node->field_place2book_tickets['und']['0']['value'] == "placeholder" || $node->field_place2book_tickets['und']['0']['value'] == "")
     {
         $node->field_place2book_tickets['und']['0']['value'] = $place2book_id;
@@ -563,7 +563,7 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
 
   switch ($op) {
     case 'insert':
-      if(isset($node->publish_on) && date(time()) < date($node->publish_on) && $node->place2book['kultunaut_export'] = 1)
+      if(isset($node->publish_on) && date(time()) < date($node->publish_on) && $node->place2book['kultunaut_export'] == 1)
       {
           $node->place2book['kultunaut_export'] = 0;
           $xml = place2book_build_xml($node, $service_settings);
@@ -934,7 +934,7 @@ function place2book_settings($nid = NULL) {
 
   // Check database for node specific settings, if nid is defined.
   if ($nid) {
-      $settings = null;
+      //$settings = null;
       $settings['place2book_id'] = NULL;
     $result = db_query('SELECT * FROM {ding_place2book} WHERE nid = :nid', array(':nid' => $nid));
     if ($result->rowCount() > 0) {
