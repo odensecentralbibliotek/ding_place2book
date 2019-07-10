@@ -563,7 +563,7 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
 
   switch ($op) {
     case 'insert':
-      if(isset($node->publish_on) && date(time()) < date($node->publish_on) && $node->place2book['kultunaut_export'] = 1)
+      if(isset($node->publish_on) && date(time()) < date($node->publish_on) && $node->place2book['kultunaut_export'] == 1)
       {
           $node->place2book['kultunaut_export'] = 0;
           $xml = place2book_build_xml($node, $service_settings);
