@@ -993,7 +993,7 @@ function _place2book_db_op($op, $node, $place2book_id = NULL) {
                                                 ':nid' => $node->nid,
                                                 ':place2book_id' => $place2book_id,
                                                 ':maintain_copy' => isset($node->place2book['maintain_copy']) ? $node->place2book['maintain_copy'] : 0,
-                                                ':capacity' => $node->capacity,
+                                                ':capacity' => isset($node->$capacity) ? $node->$capacity : 0,
                                                 ':kultunaut_export' => isset($node->place2book['kultunaut_export']) ?  $node->place2book['kultunaut_export'] : 0,
                                                 ':passive' => isset($node->place2book['passive']) ? $node->place2book['passive'] : 0,
                                                 )
