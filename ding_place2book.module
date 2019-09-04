@@ -311,10 +311,11 @@ function ding_place2book_node_update($node) {
     // Get existing Place2book settings for this node.
     $settings = place2book_settings($node->nid);
     $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
-    if($place2book_id == null)
+    //Is it needed ?!
+    /*if($place2book_id == null)
     {
         return;
-    }
+    }*/
     if($node->field_place2book_tickets['und']['0']['value'] == "placeholder" || $node->field_place2book_tickets['und']['0']['value'] == "")
     {
         $node->field_place2book_tickets['und']['0']['value'] = $place2book_id;
