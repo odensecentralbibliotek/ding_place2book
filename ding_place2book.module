@@ -1004,6 +1004,12 @@ function _place2book_db_op($op, $node, $place2book_id = NULL) {
     case 'update':
         
       $capacity = isset($node->place2book['capacity']) ? $node->place2book['capacity'] : $node->capacity;
+        if($node->place2book == null)
+        {
+            $node->place2book['maintain_copy'] = 0;
+            $node->place2book['kultunaut_export'] = 0;
+            $node->place2book['passive'] = 0;
+        }
       db_query('UPDATE {'.$db_string.'}
                 SET place2book_id = :place2book_id,
                     maintain_copy = :maintain_copy,
