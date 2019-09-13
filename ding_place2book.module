@@ -311,7 +311,8 @@ function ding_place2book_node_update($node) {
     // Get existing Place2book settings for this node.
     $settings = place2book_settings($node->nid);
     $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
-    /*if($place2book_id == null)
+    //Is it needed ?!
+    if($place2book_id == null)
     {
         return;
     }*/
@@ -931,11 +932,11 @@ function place2book_build_xml($node, $service_settings) {
 function place2book_settings($nid = NULL) {
   // Get default values.
   $settings = variable_get('ding_place2book_event_nodes', array());
-
+  
   // Check database for node specific settings, if nid is defined.
   if ($nid) {
       //$settings = null;
-      $settings['place2book_id'] = NULL;
+      //$settings['place2book_id'] = NULL;
     $result = db_query('SELECT * FROM {ding_place2book} WHERE nid = :nid', array(':nid' => $nid));
     if ($result->rowCount() > 0) {
       $settings = $result->fetchAssoc();
@@ -992,10 +993,10 @@ function _place2book_db_op($op, $node, $place2book_id = NULL) {
                                           array(
                                                 ':nid' => $node->nid,
                                                 ':place2book_id' => $place2book_id,
-                                                ':maintain_copy' => $node->place2book['maintain_copy'],
-                                                ':capacity' => $node->capacity,
-                                                ':kultunaut_export' => $node->place2book['kultunaut_export'],
-                                                ':passive' => $node->place2book['passive'],
+                                                ':maintain_copy' => isset($node->place2book['maintain_copy']) ? $node->place2book['maintain_copy'] : 0,
+                                                ':capacity' => isset($node->capacity) ? $node->capacity : 0,
+                                                ':kultunaut_export' => isset($node->place2book['kultunaut_export']) ?  $node->place2book['kultunaut_export'] : 0,
+                                                ':passive' => isset($node->place2book['passive']) ? $node->place2book['passive'] : 0,
                                                 )
       );
       break;
@@ -1003,6 +1004,12 @@ function _place2book_db_op($op, $node, $place2book_id = NULL) {
     case 'update':
         
       $capacity = isset($node->place2book['capacity']) ? $node->place2book['capacity'] : $node->capacity;
+        if($node->place2book == null)
+        {
+            $node->place2book['maintain_copy'] = 0;
+            $node->place2book['kultunaut_export'] = 0;
+            $node->place2book['passive'] = 0;
+        }
       db_query('UPDATE {'.$db_string.'}
                 SET place2book_id = :place2book_id,
                     maintain_copy = :maintain_copy,
@@ -1225,19 +1232,19 @@ function place2book_ticketsinfo($variables) {
 
   switch ($type) {
     case 'event-over':
-      $output = '<div class="btn-warning btn-large">' . t('The event has already taken place') . '</div>';
+      $output = '<div class="btn btn-warning btn-large">' . t('The event has already taken place') . '</div>';
       break;
     case 'closed-admission':
-      $output = '<div class="btn-danger btn-large">' . t('The event is closed for admission') . '</div>';
+      $output = '<div class="btn btn-danger btn-large">' . t('The event is closed for admission') . '</div>';
       break;
     case 'sale-not-started':
-      $output = '<div class="btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
+      $output = '<div class="btn btn-warning btn-large">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'no-tickets-left':
-      $output = '<div class="btn-danger btn-large">' . t('Sold out') . '</div>';
+      $output = '<div class="btn btn-danger btn-large">' . t('Sold out') . '</div>';
       break;
     case 'waiting-list':
-      $output = '<a class="btn-warning btn-large" target="_blank" href="'.$url.'">' . t('Venteliste') . '</a>';
+      $output = '<a class="btn btn-warning btn-large" target="_blank" href="'.$url.'">' . t('Venteliste') . '</a>';
       break;
     case 'order-link':
       $output = l(t('Book a ticket'), $url, array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-large') , 'target' => '_blank')));
