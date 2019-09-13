@@ -1250,7 +1250,7 @@ function place2book_ticketsinfo($variables) {
       $output = l(t('Book a ticket'), $url, array('attributes' => array('class' => array('btn', 'btn-primary', 'btn-large') , 'target' => '_blank')));
       break;
     case 'has-teams':
-      $output = l(t('Vis hold/tider'), $variables['url'], array('attributes' => array('class' => array('btn', '', 'btn-large') , 'target' => '_blank')));
+      $output = l(t('Vis hold/tider'), $variables['url'], array('attributes' => array('class' => array('btn', 'btn-info', 'btn-large') , 'target' => '_blank')));
       break;
     default:
       $output = '';
