@@ -315,7 +315,7 @@ function ding_place2book_node_update($node) {
     if($place2book_id == null)
     {
         return;
-    }*/
+    }
     if($node->field_place2book_tickets['und']['0']['value'] == "placeholder" || $node->field_place2book_tickets['und']['0']['value'] == "")
     {
         $node->field_place2book_tickets['und']['0']['value'] = $place2book_id;
