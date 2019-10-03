@@ -24,11 +24,11 @@ jQuery(document).ready(function($) {
     //TODO: Move to place2book module.
     function bindPlace2bookEvents()
     {
-        debugger;
-        if ($('#search_input').exists() && $.fn.fastLiveFilter !== undefined) {
+        
+        if ($('#search_input').length != 0 && $.fn.fastLiveFilter !== undefined) {
             $('#search_input').fastLiveFilter('.fastfilter');
             UpdatePlace2bookEventStatus();
-        } else if ($('.view-display-id-library_featured_event_list_view').exists()) {
+        } else if ($('.view-display-id-library_featured_event_list_view').length) {
             UpdatePlace2bookEventStatus();
         }
         $(document).ajaxSuccess(UpdatePlace2bookEventStatus);
@@ -55,7 +55,7 @@ jQuery(document).ready(function($) {
         };
         //Klubtilbud_tooltips();
         //Make sure that live filtering works aswell.
-        if ($('#search_input').exists() && $.fn.fastLiveFilter !== undefined) {
+        if ($('#search_input').length && $.fn.fastLiveFilter !== undefined) {
             $('#search_input').fastLiveFilter('.fastfilter');
         }
         //Update Place2Book Status for list 
