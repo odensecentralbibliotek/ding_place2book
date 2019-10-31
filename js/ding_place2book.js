@@ -9,11 +9,11 @@ jQuery(document).ready(function($) {
 	    var obj = this;
             if(Drupal.settings.ding_place2book.pre_loader_url != undefined)
             {
-                $(obj).parent().append("<div class='p2b_preloader'><a target='_blank' href='"+Drupal.settings.ding_place2book.pre_loader_url+"'>Bestil billet(ter)</a><i class='fa fa-cog fa-spin fa-2x fa-fw'></i><div>");
+                $(obj).parent().append("<div class='p2b_preloader'><a target='_blank' href='"+Drupal.settings.ding_place2book.pre_loader_url+"'>Bestil billet(ter)</a><span class='fa fa-cog fa-spin fa-2x fa-fw'></span><div>");
             }
             else
             {
-                $(obj).parent().append("<div class='p2b_preloader'><i class='fa fa-cog fa-spin fa-2x fa-fw'></i><div>");
+                $(obj).parent().append("<div class='p2b_preloader'><span class='fa fa-cog fa-spin fa-2x fa-fw'></span><div>");
             }
 		$.getJSON(Drupal.settings.basePath + 'ding/place2book/ticketinfo/' + this.value + "?time=" + new Date().getTime(), function(data) {
 		  $(obj).replaceWith(data['markup']);
@@ -77,9 +77,9 @@ jQuery(document).ready(function($) {
         $.each(Place2BookEvents, function (index, val) {
             //debugger;
             if (Drupal.settings.ding_place2book.pre_loader_url !== undefined) {
-                $(val.parentNode.parentNode).append("<div class='p2b_preloader' style='float:right;'><a target='_blank' href='" + Drupal.settings.ding_place2book.pre_loader_url + "'>Bestil billet(ter)</a><i class='fa fa-cog fa-spin fa-2x fa-fw'></i><div>");
+                $(val.parentNode.parentNode).append("<div class='p2b_preloader' style='float:right;'><a target='_blank' href='" + Drupal.settings.ding_place2book.pre_loader_url + "'>Bestil billet(ter)</a><span class='fa fa-cog fa-spin fa-2x fa-fw'></span><div>");
             } else {
-                $(val.parentNode.parentNode).append("<div class='p2b_preloader' style='float:right;'><i class='fa fa-cog fa-spin fa-2x fa-fw'></i><div>");
+                $(val.parentNode.parentNode).append("<div class='p2b_preloader' style='float:right;'><span class='fa fa-cog fa-spin fa-2x fa-fw'></span><div>");
             }
         });
         //Retrive shown events status. ( Making it appear more responsive loading to user)
