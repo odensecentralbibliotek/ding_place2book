@@ -296,7 +296,7 @@ function ding_place2book_node_insert($node) {
  * Implementation of hook_node_update()
  */
 function ding_place2book_node_update($node) {
-  if ($node->type == "ding_event") {
+  if ($node->type == "ding_event" && $_REQUEST['q'] != "ding_campaign/ajax/select") {
     // Continue only if node contains place2book data - they will not be there
     // when performing a bulk update, updating via scheduler module etc.
      $op = 'update';
