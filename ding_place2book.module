@@ -585,7 +585,7 @@ function place2book_event_op($op, $node, $place2book_id = NULL) {
    
       // Catch insert error by checking the event id.
       if (empty($req_result->headers['event-id'])) {
-        $p2b_error = $req_result->headers['status'] . ' - ' . $req_result->headers['error-message'];
+        $p2b_error = $req_result->error . ' - ' . $req_result->data;
         drupal_set_message(t('INSERT was NOT PERFORMED on Place2book. Place2book returned this error:') . $p2b_error, 'error', FALSE);
       }
       else {
